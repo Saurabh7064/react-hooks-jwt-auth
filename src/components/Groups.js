@@ -27,6 +27,7 @@ const Groups = () => {
 
                 setSubmitted(true);
                 console.log(response.data);
+                refreshList();
             })
             .catch(e => {
                 console.log(e);
@@ -39,6 +40,13 @@ const Groups = () => {
     };
 
     useEffect(() => {
+        retrieveGroups();
+    }, []);
+
+    const refreshList = () => {
+        retrieveGroups();
+    };
+    const retrieveGroups = () => {
         UserService.getGroups().then(
             (response) => {
                 setGroup(response.data);
@@ -58,7 +66,7 @@ const Groups = () => {
                 }
             }
         );
-    }, []);
+    };
 
     return (
         <div className="container">
