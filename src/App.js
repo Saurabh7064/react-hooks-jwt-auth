@@ -14,6 +14,7 @@ import BoardModerator from "./components/BoardModerator";
 import BoardAdmin from "./components/BoardAdmin";
 
 import EventBus from "./common/EventBus";
+import Groups from "./components/Groups";
 
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -49,7 +50,7 @@ const App = () => {
     <div>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
-          bezKoder
+          Assignment 3
         </Link>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
@@ -81,6 +82,11 @@ const App = () => {
               </Link>
             </li>
           )}
+              <li className="nav-item">
+                <Link to={"/groups"} className="nav-link">
+                  Groups
+                </Link>
+              </li>
         </div>
 
         {currentUser ? (
@@ -121,6 +127,7 @@ const App = () => {
           <Route path="/register" element={<Register/>} />
           <Route path="/profile" element={<Profile/>} />
           <Route path="/user" element={<BoardUser/>} />
+          <Route path="/groups" element={<Groups/>} />
           <Route path="/mod" element={<BoardModerator/>} />
           <Route path="/admin" element={<BoardAdmin/>} />
         </Routes>

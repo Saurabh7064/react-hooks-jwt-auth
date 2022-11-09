@@ -2,6 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:8080/api/test/";
+const API_URL_2 = "http://localhost:8080/api/";
 
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
@@ -19,11 +20,16 @@ const getAdminBoard = () => {
   return axios.get(API_URL + "admin", { headers: authHeader() });
 };
 
+const getGroups = () => {
+  return axios.get(API_URL_2 + "groups", { headers: authHeader() });
+};
+
 const UserService = {
   getPublicContent,
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
+  getGroups
 };
 
 export default UserService;
