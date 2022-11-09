@@ -4,23 +4,54 @@ import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
 
 const Groups = () => {
-    const [content, setContent] = useState("");
+
+    const initialGroupState = {
+        groupName: ""
+    }
+    const [group, setGroup] = useState("");
+    const [addGroup, setAddGroup] = useState(initialGroupState);
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleInputChange = event => {
+        const { name, value } = event.target;
+        setAddGroup({ ...addGroup, [name]: value });
+    };
+
+    const saveGroup = () => {
+        var data = {
+            groupName: addGroup.groupName,
+        };
+
+        UserService.saveGroup(addGroup.groupName)
+            .then(response => {
+
+                setSubmitted(true);
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
+
+    const newGroup = () => {
+        setAddGroup(initialGroupState);
+        setSubmitted(false);
+    };
 
     useEffect(() => {
         UserService.getGroups().then(
             (response) => {
-                setContent(response.data);
-                debugger;
+                setGroup(response.data);
             },
             (error) => {
-                const _content =
+                const group =
                     (error.response &&
                         error.response.data &&
                         error.response.data.message) ||
                     error.message ||
                     error.toString();
 
-                setContent(_content);
+                setGroup(group);
 
                 if (error.response && error.response.status === 401) {
                     EventBus.dispatch("logout");
@@ -32,10 +63,16 @@ const Groups = () => {
     return (
         <div className="container">
             <header className="jumbotron">
+               {/* <h3>{group}</h3>*/}
+                {/*<ul>*/}
+                {/*    {group.map((cnt)=>(*/}
+                {/*        <li>cnt.groupName</li>*/}
+                {/*        ))}*/}
+                {/*</ul>*/}
 
                 <ul className="list-group">
-                    {content &&
-                    content.map((cnt, index) => (
+                    {group &&
+                    group.map((cnt, index) => (
                         <li
                             key={index}
                         >
@@ -44,6 +81,22 @@ const Groups = () => {
                     ))}
                 </ul>
             </header>
+
+            <div className="form-group">
+                <label htmlFor="title">Group Name</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    id="title"
+                    required
+                    value={addGroup.groupName}
+                    onChange={handleInputChange}
+                    name="groupName"
+                />
+            </div>
+            <button onClick={saveGroup} className="btn btn-success">
+                Submit
+            </button>
         </div>
     );
 };

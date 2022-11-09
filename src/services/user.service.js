@@ -24,12 +24,19 @@ const getGroups = () => {
   return axios.get(API_URL_2 + "groups", { headers: authHeader() });
 };
 
+const saveGroup = groupName => {
+  debugger;
+  return axios.post(API_URL_2 + "group",{groupName}, { headers: authHeader() });
+
+};
+
 const UserService = {
   getPublicContent,
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
-  getGroups
+  getGroups,
+  saveGroup
 };
 
 export default UserService;
