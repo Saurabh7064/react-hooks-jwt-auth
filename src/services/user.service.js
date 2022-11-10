@@ -23,10 +23,20 @@ const getAdminBoard = () => {
 const getGroups = () => {
   return axios.get(API_URL_2 + "groups", { headers: authHeader() });
 };
+const getPosts = () => {
+  return axios.get(API_URL_2 + "posts", { headers: authHeader() });
+};
 
 const saveGroup = groupName => {
-  debugger;
   return axios.post(API_URL_2 + "group",{groupName}, { headers: authHeader() });
+
+};
+
+const savePost = post => {
+  debugger;
+
+
+  return axios.post(API_URL_2 + "post",{"postMessage":post.postMessage,"group":{"id":post.group.id}}, { headers: authHeader() });
 
 };
 
@@ -36,7 +46,9 @@ const UserService = {
   getModeratorBoard,
   getAdminBoard,
   getGroups,
-  saveGroup
+  saveGroup,
+  getPosts,
+  savePost
 };
 
 export default UserService;

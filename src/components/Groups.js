@@ -19,7 +19,7 @@ const Groups = () => {
 
     const saveGroup = () => {
         var data = {
-            groupName: addGroup.groupName,
+            groupName: addGroup.groupName
         };
 
         UserService.saveGroup(addGroup.groupName)

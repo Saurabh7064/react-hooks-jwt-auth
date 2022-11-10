@@ -15,6 +15,7 @@ import BoardAdmin from "./components/BoardAdmin";
 
 import EventBus from "./common/EventBus";
 import Groups from "./components/Groups";
+import Posts from "./components/Posts";
 
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -87,6 +88,12 @@ const App = () => {
                   Groups
                 </Link>
               </li>
+
+          <li className="nav-item">
+            <Link to={"/posts"} className="nav-link">
+              Posts
+            </Link>
+          </li>
         </div>
 
         {currentUser ? (
@@ -128,6 +135,7 @@ const App = () => {
           <Route path="/profile" element={<Profile/>} />
           <Route path="/user" element={<BoardUser/>} />
           <Route path="/groups" element={<Groups/>} />
+          <Route path="/posts" element={<Posts/>} />
           <Route path="/mod" element={<BoardModerator/>} />
           <Route path="/admin" element={<BoardAdmin/>} />
         </Routes>
