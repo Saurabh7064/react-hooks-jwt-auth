@@ -40,7 +40,7 @@ const Posts = () => {
     useEffect(() => {
         retrievePosts();
         retrieveGroups();
-    }, []);
+    }, [submitted]); //this will execute retrieve posts and groups
 
     const handleInputChange = event => {
         const { name, value } = event.target;
@@ -81,7 +81,7 @@ const Posts = () => {
 
                 setSubmitted(true);
                 console.log(response.data);
-                refreshList();
+                //refreshList();
             })
             .catch(e => {
                 console.log(e);
