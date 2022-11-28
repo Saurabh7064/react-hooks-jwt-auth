@@ -34,10 +34,27 @@ const saveGroup = groupName => {
 
 const savePost = post => {
   debugger;
-
-
   return axios.post(API_URL_2 + "post",{"postMessage":post.postMessage,"group":{"id":post.group.id}}, { headers: authHeader() });
+};
 
+const saveFile = post => {
+  debugger;
+  return axios.post(API_URL_2 + "post",{"postMessage":post.postMessage,"group":{"id":post.group.id}}, { headers: authHeader() });
+};
+
+const upload = (file, onUploadProgress) => {
+  let formData = new FormData();
+
+  formData.append("file", file);
+  let ctype = {
+    "Content-Type": "multipart/form-data",
+  };
+  return axios.post(API_URL_2 + "upload",formData, { headers: authHeader(),ctype,onUploadProgress });
+
+};
+//to get info of already stored files
+const getFiles = () => {
+  return axios.get(API_URL_2 + "files", { headers: authHeader() });
 };
 
 const UserService = {
@@ -48,7 +65,10 @@ const UserService = {
   getGroups,
   saveGroup,
   getPosts,
-  savePost
+  savePost,
+  saveFile,
+  upload,
+  getFiles
 };
 
 export default UserService;

@@ -13,7 +13,17 @@ const Posts = () => {
     const [submitted, setSubmitted] = useState(false);
 
     const [group, setGroup] = useState("");
-    const [selectedGroupValue, setSelectedGroupValue] = useState("");
+    const [selectedGroupValue, setSelectedGroupValue] = useState("3");
+
+    //upload files
+    const [selectedFiles, setSelectedFiles] = useState(undefined);
+    const [currentFile, setCurrentFile] = useState(undefined);
+    const [progress, setProgress] = useState(0);
+    const [message, setMessage] = useState("");
+    const [fileInfos, setFileInfos] = useState([]);
+
+
+
 
     const retrieveGroups = () => {
         UserService.getGroups().then(
@@ -36,6 +46,8 @@ const Posts = () => {
             }
         );
     };
+
+
 
     useEffect(() => {
         retrievePosts();
@@ -69,13 +81,22 @@ const Posts = () => {
     };
 
     const savePost = () => {
+        if (addPost.postMessage === '' && selectedFiles[0].name.length<1) {
+            alert("Post message is required");
+            return;
+        }
 
-       var data = {
+        if(selectedFiles[0].name.length>1)
+            addPost.postMessage=selectedFiles[0].name;
+
+        var data = {
             "postMessage":addPost.postMessage,
             "group":{
-            "id":selectedGroupValue
+                "id":selectedGroupValue
+            }
         }
-        }
+        if(selectedFiles[0].name>1)
+        upload();
         UserService.savePost(data)
             .then(response => {
 
@@ -90,6 +111,39 @@ const Posts = () => {
     const refreshList = () => {
         retrievePosts();
     };
+
+    //upload files
+    const selectFile = (event) => {
+        setSelectedFiles(event.target.files);
+    };
+
+    const upload = () => {
+        let currentFile = selectedFiles[0];
+
+        setProgress(0);
+        setCurrentFile(currentFile);
+
+        UserService.upload(currentFile, (event) => {
+            setProgress(Math.round((100 * event.loaded) / event.total));
+        })
+            .then((response) => {
+                setMessage(response.data.message);
+                return UserService.getFiles();
+            })
+            .then((files) => {
+                setFileInfos(files.data);
+            })
+            .catch(() => {
+                setProgress(0);
+                setMessage("Could not upload the file!");
+                setCurrentFile(undefined);
+            });
+
+        setSelectedFiles(undefined);
+    };
+
+
+
     return (
         <div className="container">
             <header className="jumbotron">
@@ -113,10 +167,51 @@ const Posts = () => {
                         onChange={handleInputChange}
                         name="postMessage"
                     />
+                               {/*file upload starts*/}
+                    <div>
+                        {currentFile && (
+                            <div className="progress">
+                                <div
+                                    className="progress-bar progress-bar-info progress-bar-striped"
+                                    role="progressbar"
+                                    aria-valuenow={progress}
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style={{ width: progress + "%" }}
+                                >
+                                    {progress}%
+                                </div>
+                            </div>
+                        )}
+
+                        <label className="btn btn-default">
+                            <input type="file" onChange={selectFile} />
+                        </label>
+
+                        {/*<div className="alert alert-light" role="alert">*/}
+                        {/*    {message}*/}
+                        {/*</div>*/}
+
+                        {/*<div className="card">*/}
+                        {/*    <div className="card-header">List of Files</div>*/}
+                        {/*    <ul className="list-group list-group-flush">*/}
+                        {/*        {fileInfos &&*/}
+                        {/*        fileInfos.map((file, index) => (*/}
+                        {/*            <li className="list-group-item" key={index}>*/}
+                        {/*                <a href={file.url}>{file.name}</a>*/}
+                        {/*            </li>*/}
+                        {/*        ))}*/}
+                        {/*    </ul>*/}
+                        {/*</div>*/}
+                    </div>
+                    {/*file upload ends*/}
+
                 </div>
-                <button onClick={savePost} className="btn btn-success">
+                <button  onClick={savePost} className="btn btn-success">
                     Submit
                 </button>
+
+                {/*Post message display*/}
 
                 <ul className="list-group">
                     {posts &&
