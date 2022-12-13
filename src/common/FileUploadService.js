@@ -1,5 +1,6 @@
 import http from "../http-common";
 
+// this file is not used
 const upload = (file, onUploadProgress) => {
     let formData = new FormData();
 

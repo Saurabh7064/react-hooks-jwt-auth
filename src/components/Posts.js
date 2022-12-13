@@ -5,7 +5,8 @@ import EventBus from "../common/EventBus";
 
 const Posts = () => {
     const initialPostState = {
-        postMessage: ""
+        postMessage: "",
+        hasFile: "false"
     }
 
     const [posts, setPosts] = useState("");
@@ -16,7 +17,7 @@ const Posts = () => {
     const [selectedGroupValue, setSelectedGroupValue] = useState("3");
 
     //upload files
-    const [selectedFiles, setSelectedFiles] = useState(undefined);
+        const [selectedFiles, setSelectedFiles] = useState(undefined);
     const [currentFile, setCurrentFile] = useState(undefined);
     const [progress, setProgress] = useState(0);
     const [message, setMessage] = useState("");
@@ -81,28 +82,32 @@ const Posts = () => {
     };
 
     const savePost = () => {
+        debugger;
         if (addPost.postMessage === '' && selectedFiles[0].name.length<1) {
             alert("Post message is required");
             return;
         }
 
-        if(selectedFiles[0].name.length>1)
+        if(selectedFiles!=undefined && selectedFiles[0].name.length>1){
             addPost.postMessage=selectedFiles[0].name;
+            addPost.hasFile="true"
+        }
 
         var data = {
             "postMessage":addPost.postMessage,
+            "hasFile":addPost.hasFile,
             "group":{
                 "id":selectedGroupValue
             }
         }
-        if(selectedFiles[0].name>1)
+        if(selectedFiles!=undefined && selectedFiles[0].name.length>1)
         upload();
         UserService.savePost(data)
             .then(response => {
 
                 setSubmitted(true);
                 console.log(response.data);
-                //refreshList();
+                refreshList();
             })
             .catch(e => {
                 console.log(e);
@@ -110,6 +115,7 @@ const Posts = () => {
     };
     const refreshList = () => {
         retrievePosts();
+        retrieveGroups();
     };
 
     //upload files
@@ -118,6 +124,7 @@ const Posts = () => {
     };
 
     const upload = () => {
+        debugger;
         let currentFile = selectedFiles[0];
 
         setProgress(0);
@@ -149,7 +156,8 @@ const Posts = () => {
             <header className="jumbotron">
 
                 <div className="form-group">
-                    <label htmlFor="title">Post Something</label>
+                    <h2 >Post Something</h2>
+                    <label htmlFor="title">Select Group</label>
 
                     <select onChange={(e)=>setSelectedGroupValue(e.target.value)}>
                         {group &&
@@ -157,8 +165,9 @@ const Posts = () => {
                             <option key={index} value={cnt.id}> {cnt.groupName} </option>
                         ))}
                     </select>
+                    <label htmlFor="title">What's on your mind?</label>
 
-                    <input
+                    <textarea
                         type="text"
                         className="form-control"
                         id="title"
@@ -208,7 +217,7 @@ const Posts = () => {
 
                 </div>
                 <button  onClick={savePost} className="btn btn-success">
-                    Submit
+                    Post...
                 </button>
 
                 {/*Post message display*/}
@@ -216,10 +225,14 @@ const Posts = () => {
                 <ul className="list-group">
                     {posts &&
                     posts.map((cnt, index) => (
-                        <li
-                            key={index}
-                        >
-                            {cnt.postMessage}
+                        <li key={index}>
+
+                            {cnt.postMessage &&(
+                                cnt.postMessage
+                            )}
+                            {cnt.url &&(
+                                <a href={cnt.url}>Download</a>
+                            )}
                         </li>
                     ))}
                 </ul>

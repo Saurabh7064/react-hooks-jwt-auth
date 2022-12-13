@@ -77,7 +77,21 @@ const Groups = () => {
                 {/*        <li>cnt.groupName</li>*/}
                 {/*        ))}*/}
                 {/*</ul>*/}
-
+                <div className="form-group">
+                    <label htmlFor="title">Create Group</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="title"
+                        required
+                        value={addGroup.groupName}
+                        onChange={handleInputChange}
+                        name="groupName"
+                    />
+                </div>
+                <button onClick={saveGroup} className="btn btn-success">
+                    Submit
+                </button>
                 <ul className="list-group">
                     {group &&
                     group.map((cnt, index) => (
@@ -90,21 +104,7 @@ const Groups = () => {
                 </ul>
             </header>
 
-            <div className="form-group">
-                <label htmlFor="title">Group Name</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    required
-                    value={addGroup.groupName}
-                    onChange={handleInputChange}
-                    name="groupName"
-                />
-            </div>
-            <button onClick={saveGroup} className="btn btn-success">
-                Submit
-            </button>
+
         </div>
     );
 };
