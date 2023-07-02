@@ -9,6 +9,7 @@ const Posts = () => {
         hasFile: "false"
     }
 
+    //array
     const [posts, setPosts] = useState("");
     const [addPost, setAddPost] = useState(initialPostState);
     const [submitted, setSubmitted] = useState(false);
@@ -80,6 +81,26 @@ const Posts = () => {
             }
         );
     };
+
+    const deletePost = (index) => {
+            UserService.deletePost(index).then(
+                (response) => {
+                    console.log("deleted");
+                    refreshList();
+                },
+                (error) => {
+                    const _Posts =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                    if (error.response && error.response.status === 401) {
+                        EventBus.dispatch("logout");
+                    }
+                }
+            );
+    }
 
     const savePost = () => {
         debugger;
@@ -163,7 +184,8 @@ const Posts = () => {
                         {group &&
                         group.map((cnt, index) => (
                             <option key={index} value={cnt.id}> {cnt.groupName} </option>
-                        ))}
+
+                            ))}
                     </select>
                     <label htmlFor="title">What's on your mind?</label>
 
@@ -225,7 +247,8 @@ const Posts = () => {
                 <ul className="list-group">
                     {posts &&
                     posts.map((cnt, index) => (
-                        <li key={index}>
+
+                        <li key={index} >
 
                             {cnt.postMessage &&(
                                 cnt.postMessage
@@ -233,6 +256,8 @@ const Posts = () => {
                             {cnt.url &&(
                                 <a href={cnt.url}>Download</a>
                             )}
+                            <button onClick={() => deletePost(cnt.id)} className="btn btn-danger">Delete</button>
+
                         </li>
                     ))}
                 </ul>

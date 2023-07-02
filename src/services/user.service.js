@@ -57,6 +57,14 @@ const getFiles = () => {
   return axios.get(API_URL + "files", { headers: authHeader() });
 };
 
+const deletePost = id => {
+  return axios.delete(API_URL_2 + "post/"+id, { headers: authHeader() });
+};
+
+const deleteGroup = id => {
+  return axios.delete(API_URL_2 + "group/"+id, { headers: authHeader() });
+};
+
 const UserService = {
   getPublicContent,
   getUserBoard,
@@ -68,7 +76,9 @@ const UserService = {
   savePost,
   saveFile,
   upload,
-  getFiles
+  getFiles,
+  deletePost,
+  deleteGroup
 };
 
 export default UserService;

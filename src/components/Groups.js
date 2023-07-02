@@ -68,6 +68,26 @@ const Groups = () => {
         );
     };
 
+    const deleteGroup = (index) => {
+        UserService.deleteGroup(index).then(
+            (response) => {
+                console.log("deleted");
+                refreshList();
+            },
+            (error) => {
+                const _Posts =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+                if (error.response && error.response.status === 401) {
+                    EventBus.dispatch("logout");
+                }
+            }
+        );
+    }
+
     return (
         <div className="container">
             <header className="jumbotron">
@@ -99,6 +119,8 @@ const Groups = () => {
                             key={index}
                         >
                             {cnt.groupName}
+                            <button onClick={() => deleteGroup(cnt.id)} className="btn btn-danger">Delete</button>
+
                         </li>
                     ))}
                 </ul>
